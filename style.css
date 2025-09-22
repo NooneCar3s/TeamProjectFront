@@ -91,3 +91,172 @@ body {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+/* Общий стиль */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background: #1a1a1a;
+  padding: 30px 20px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+}
+
+.sidebar .logo {
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.sidebar nav ul li.active,
+.sidebar nav ul li:hover {
+  background: linear-gradient(135deg, #6a11cb, #b91372);
+  box-shadow: 0 0 10px #b91372, 0 0 20px #6a11cb;
+}
+
+/* Main content */
+.main-content {
+  margin-left: 240px;
+  padding: 30px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header .search input {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  outline: none;
+  width: 250px;
+}
+
+.header .profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header .profile button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6a11cb, #b91372);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header .profile button:hover {
+  box-shadow: 0 0 15px #b91372, 0 0 25px #6a11cb;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  flex: 1;
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(106, 17, 203, 0.2);
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 0 25px #b91372, 0 0 35px #6a11cb;
+}
+
+.card h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #ccc;
+}
+
+.card span {
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Graph placeholder */
+.graph {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(106, 17, 203, 0.2);
+}
+
+.graph h3 {
+  margin-top: 0;
+}
+
+.graph-placeholder {
+  height: 250px;
+  border: 2px dashed #444;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  margin-top: 15px;
+}
+
+/* Адаптивность */
+@media (max-width: 900px) {
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+  .cards {
+    flex-direction: column;
+  }
+}
