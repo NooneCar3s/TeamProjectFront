@@ -2,6 +2,7 @@
 body {
   margin: 0;
   font-family: 'Inter', Arial, sans-serif;
+  background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
 }
 
 /* Header */
@@ -149,10 +150,13 @@ body, html {
   top: 0;
   width: 220px;
   height: 100%;
-  background: #1a1a1a;
+  background: rgba(26, 26, 26, 0.75); /* прозрачность */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 30px 20px;
   box-shadow: 2px 0 10px rgba(0,0,0,0.5);
 }
+
 
 .sidebar .logo {
   color: #fff;
