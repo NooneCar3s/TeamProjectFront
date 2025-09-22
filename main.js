@@ -11,6 +11,25 @@ if (localStorage.getItem("loggedIn") !== "true") {
   }
 }
 
+// Buttons Sound
+// Функция для воспроизведения звука
+function playSound(src, volume = 0.5) {
+  const audio = new Audio(src);
+  audio.volume = volume;
+  audio.currentTime = 0;
+  audio.play();
+}
+
+// Находим все кнопки
+const buttons = document.querySelectorAll('button, .sidebar nav ul li');
+
+// Назначаем события
+buttons.forEach(btn => {
+  btn.addEventListener('mouseover', () => playSound('assets/sounds/hover.mp3', 0.1));
+  btn.addEventListener('click', () => playSound('assets/sounds/click.mp3', 0.1));
+});
+
+
 // Переход на другую страницу
 function goToPage(page) {
   window.location.href = page;
