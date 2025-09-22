@@ -1,0 +1,34 @@
+// Проверяем "сессию"
+if (localStorage.getItem("loggedIn") === "true") {
+  if (window.location.pathname.endsWith("index.html")) {
+    window.location.href = "dashboard.html";
+  }
+}
+
+// Логин
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    // простая проверка
+    if (username === "admin" && password === "1234") {
+      localStorage.setItem("loggedIn", "true");
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Неверный логин или пароль");
+    }
+  });
+}
+
+// Выход
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("loggedIn");
+    window.location.href = "index.html";
+  });
+}
