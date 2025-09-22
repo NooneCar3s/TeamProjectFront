@@ -486,6 +486,49 @@ body, html {
 }
 
 
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1e1e2f;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+}
+
+.close {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.avatar-grid img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.avatar-grid img:hover {
+  transform: scale(1.1);
+}
+
+
 /* ///////////////////////////////////////ACCOUNT/////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////// */
 /* /////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////////////////////// */

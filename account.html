@@ -29,7 +29,7 @@
         <input type="text" placeholder="Поиск...">
       </div>
       <div class="profile">
-        <span>Привет, Admin</span>
+        <span>Привет, <span id="usernameDisplay">Admin</span></span>
         <button id="logoutBtn">Выйти</button>
       </div>
     </header>
@@ -39,23 +39,37 @@
       <h2>Информация об аккаунте</h2>
       <div class="account-card">
         <div class="avatar">
-          <img src="https://via.placeholder.com/100" alt="Аватарка">
+          <img id="avatarImg" src="assets/avatars/avatar1.png" alt="Аватарка">
         </div>
         <div class="user-info">
-          <p><strong>Юзернейм:</strong> <span id="usernameDisplay">Admin</span></p>
+          <p><strong>Юзернейм:</strong> <span id="usernameText">Admin</span></p>
           <button onclick="changeUsername()">Сменить юзернейм</button>
 
           <p><strong>Пароль:</strong> ********</p>
           <button onclick="changePassword()">Сменить пароль</button>
 
           <p><strong>Аватарка:</strong></p>
-          <button onclick="changeAvatar()">Сменить аватарку</button>
+          <button onclick="openAvatarModal()">Выбрать аватарку</button>
         </div>
       </div>
     </section>
+  </div>
 
+  <!-- Avatar Modal -->
+  <div id="avatarModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAvatarModal()">&times;</span>
+      <h3>Выберите аватарку</h3>
+      <div class="avatar-grid">
+        <img src="assets/avatars/avatar1.png" onclick="setAvatar(this.src)">
+        <img src="assets/avatars/avatar2.png" onclick="setAvatar(this.src)">
+        <img src="assets/avatars/avatar3.png" onclick="setAvatar(this.src)">
+        <img src="assets/avatars/avatar4.png" onclick="setAvatar(this.src)">
+      </div>
+    </div>
   </div>
 
   <script src="main.js"></script>
 </body>
 </html>
+

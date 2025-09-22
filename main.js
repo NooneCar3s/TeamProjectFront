@@ -76,3 +76,56 @@ if (historyBody) {
 /* ///////////////////////////////////////HISTORY/////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////////////HISTORY////////////////////////////////////////////////////////// */
 
+/* ///////////////////////////////////////ACCOUNT/////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////// */
+
+
+// Заглушки
+function changeUsername() {
+  const newUsername = prompt("Введите новый юзернейм:", "Admin");
+  if (newUsername) {
+    document.getElementById("usernameDisplay").textContent = newUsername;
+    alert("Юзернейм успешно изменён!");
+  }
+}
+
+function changePassword() {
+  const newPassword = prompt("Введите новый пароль:");
+  if (newPassword) {
+    alert("Пароль успешно изменён!");
+  }
+}
+
+// --- Модальное окно ---
+function openAvatarModal() {
+  document.getElementById("avatarModal").style.display = "flex";
+}
+
+function closeAvatarModal() {
+  document.getElementById("avatarModal").style.display = "none";
+}
+
+// --- Установка аватарки ---
+function setAvatar(src) {
+  document.getElementById("avatarImg").src = src;
+  localStorage.setItem("avatar", src);
+  closeAvatarModal();
+}
+
+// --- Загрузка сохранённых данных ---
+window.onload = function() {
+  const savedAvatar = localStorage.getItem("avatar");
+  if (savedAvatar) {
+    document.getElementById("avatarImg").src = savedAvatar;
+  }
+
+  const savedUsername = localStorage.getItem("username");
+  if (savedUsername) {
+    document.getElementById("usernameDisplay").textContent = savedUsername;
+    document.getElementById("usernameText").textContent = savedUsername;
+  }
+};
+
+
+/* ///////////////////////////////////////ACCOUNT/////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////// */
