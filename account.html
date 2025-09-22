@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Account | Crypto Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CryptoWallet</h2>
+    <nav>
+      <ul>
+        <li onclick="goToPage('dashboard.html')">Dashboard</li>
+        <li onclick="goToPage('wallet.html')">Wallet</li>
+        <li onclick="goToPage('exchange.html')">Exchange</li>
+        <li onclick="goToPage('history.html')">History</li>
+        <li class="active">Account</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="search">
+        <input type="text" placeholder="Поиск...">
+      </div>
+      <div class="profile">
+        <span>Привет, Admin</span>
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </header>
+
+    <!-- Account Section -->
+    <section class="account-section">
+      <h2>Информация об аккаунте</h2>
+      <div class="account-card">
+        <div class="avatar">
+          <img src="https://via.placeholder.com/100" alt="Аватарка">
+        </div>
+        <div class="user-info">
+          <p><strong>Юзернейм:</strong> <span id="usernameDisplay">Admin</span></p>
+          <button onclick="changeUsername()">Сменить юзернейм</button>
+
+          <p><strong>Пароль:</strong> ********</p>
+          <button onclick="changePassword()">Сменить пароль</button>
+
+          <p><strong>Аватарка:</strong></p>
+          <button onclick="changeAvatar()">Сменить аватарку</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
