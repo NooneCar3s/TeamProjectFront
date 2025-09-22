@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Exchange | Crypto Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CryptoWallet</h2>
+    <nav>
+      <ul>
+        <li onclick="goToPage('dashboard.html')">Dashboard</li>
+        <li onclick="goToPage('wallet.html')">Wallet</li>
+        <li class="active">Exchange</li>
+        <li onclick="goToPage('history.html')">History</li>
+        <li onclick="goToPage('settings.html')">Settings</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="search">
+        <input type="text" placeholder="Поиск монет...">
+      </div>
+      <div class="profile">
+        <span>Привет, Admin</span>
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </header>
+
+    <!-- Exchange Section -->
+    <section class="exchange-section">
+      <h2>Обмен криптовалюты</h2>
+      <div class="exchange-card">
+        <div class="exchange-row">
+          <label>Из:</label>
+          <select id="fromCoin">
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+            <option value="USDT">USDT</option>
+          </select>
+        </div>
+        <div class="exchange-row">
+          <label>В:</label>
+          <select id="toCoin">
+            <option value="ETH">ETH</option>
+            <option value="BTC">BTC</option>
+            <option value="USDT">USDT</option>
+          </select>
+        </div>
+        <div class="exchange-row">
+          <label>Сумма:</label>
+          <input type="number" id="amount" placeholder="0.00">
+        </div>
+        <div class="exchange-row">
+          <button id="exchangeBtn">Обменять</button>
+        </div>
+        <p id="exchangeResult"></p>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
