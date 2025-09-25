@@ -6,18 +6,39 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-body">
-<audio id="hoverSound" src="assets/sounds/hover.mp3"></audio>
-<audio id="clickSound" src="assets/sounds/click.mp3"></audio>
+  <!-- Звуки -->
+  <audio id="hoverSound" src="assets/sounds/hover.mp3"></audio>
+  <audio id="clickSound" src="assets/sounds/click.mp3"></audio>
+
+  <!-- Контейнер логина -->
   <div class="login-container">
     <h1 class="login-title">Crypto Wallet</h1>
     <p class="login-subtitle">Войдите в аккаунт, чтобы продолжить</p>
+    
     <form id="loginForm" class="login-form">
       <input type="text" id="username" placeholder="Логин" required>
       <input type="password" id="password" placeholder="Пароль" required>
       <button type="submit">Войти</button>
     </form>
+
     <p class="login-hint">Тест: admin / 1234</p>
+    <p class="login-register">Нет аккаунта? <span id="open-register">Зарегистрироваться</span></p>
   </div>
+
+  <!-- Модалка регистрации -->
+  <div class="modal" id="register-modal">
+    <div class="modal-content">
+      <span class="close" id="close-register">&times;</span>
+      <h2>Регистрация</h2>
+      <input type="text" placeholder="Логин" id="reg-username">
+      <input type="email" placeholder="Email" id="reg-email">
+      <input type="password" placeholder="Пароль" id="reg-password">
+      <input type="password" placeholder="Повторите пароль" id="reg-password2">
+      <button id="register-btn">Создать аккаунт</button>
+      <p id="register-error" class="error"></p>
+    </div>
+  </div>
+
   <script src="main.js"></script>
 </body>
 </html>

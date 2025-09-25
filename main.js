@@ -157,3 +157,64 @@ window.onload = function() {
 
 /* ///////////////////////////////////////ACCOUNT/////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////// */
+
+
+/* ///////////////////////////////////////REGISTRATION/////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////REGISTRATION////////////////////////////////////////////////////////// */
+
+    // --- Модалка регистрации ---
+    const registerModal = document.getElementById('register-modal');
+    const openRegister = document.getElementById('open-register');
+    const closeRegister = document.getElementById('close-register');
+    const registerBtn = document.getElementById('register-btn');
+    const errorMsg = document.getElementById('register-error');
+
+    openRegister.addEventListener('click', () => {
+      registerModal.style.display = 'flex';
+    });
+
+    closeRegister.addEventListener('click', () => {
+      registerModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === registerModal) {
+        registerModal.style.display = 'none';
+      }
+    });
+
+    // --- Валидация регистрации ---
+    registerBtn.addEventListener('click', () => {
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const pass = document.getElementById('reg-password').value;
+      const pass2 = document.getElementById('reg-password2').value;
+
+      if (username.length < 3) {
+        errorMsg.textContent = "Логин должен быть минимум 3 символа";
+        return;
+      }
+      if (!email.includes('@') || !email.includes('.')) {
+        errorMsg.textContent = "Введите корректный email";
+        return;
+      }
+      if (pass.length < 6) {
+        errorMsg.textContent = "Пароль должен быть минимум 6 символов";
+        return;
+      }
+      if (pass !== pass2) {
+        errorMsg.textContent = "Пароли не совпадают";
+        return;
+      }
+
+      errorMsg.textContent = "";
+      alert("Регистрация успешна!");
+
+      // После регистрации подставляем логин в форму входа
+      document.getElementById('username').value = username;
+
+      registerModal.style.display = 'none';
+    });
+
+    /* ///////////////////////////////////////REGISTRATION/////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////REGISTRATION////////////////////////////////////////////////////////// */
