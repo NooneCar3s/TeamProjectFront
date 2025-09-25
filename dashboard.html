@@ -27,47 +27,70 @@
 
 
   <!-- Main Content -->
-  <div class="main-content">
-    <!-- Header -->
-<header class="header">
-  <div class="search">
-    <input type="text" placeholder="Поиск...">
-  </div>
-  <div class="profile">
-    <span>Привет, <span id="usernameDisplay">Admin</span></span>
-     <img id="headerAvatar" src="assets/avatars/avatar1.png" alt="Аватарка" onclick="goToPage('account.html')">
-    <button id="logoutBtn">Выйти</button>
-  </div>
-</header>
+<div class="main-content">
 
+  <!-- Header -->
+  <header class="header">
+    <div class="search">
+      <input type="text" placeholder="Поиск...">
+    </div>
+    <div class="profile">
+      <span>Привет, <span id="usernameDisplay">Admin</span></span>
+      <img id="headerAvatar" src="assets/avatars/avatar1.png" alt="Аватарка" onclick="goToPage('account.html')">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </header>
 
-    <!-- Dashboard cards -->
-<section class="cards">
-  <div class="card">
-    <h3>Баланс USD</h3>
-    <p>$12,345.67</p>
-    <span>На текущий момент</span>
-  </div>
-  <div class="card">
-    <h3>Сумма пополнений</h3>
-    <p>$5,000.00</p>
-    <span>Всего за все время</span>
-  </div>
-  <div class="card">
-    <h3>Рост баланса</h3>
-    <p>+8.5%</p>
-    <span>По сравнению с прошлым месяцем</span>
-  </div>
-</section>
+  <!-- Content wrapper -->
+  <div class="dashboard-wrapper">
+    <!-- Left: Cards + Graph -->
+    <div class="dashboard-left">
+      <section class="cards">
+        <div class="card">
+          <h3>Баланс USD</h3>
+          <p>$12,345.67</p>
+          <span>На текущий момент</span>
+        </div>
+        <div class="card">
+          <h3>Сумма пополнений</h3>
+          <p>$5,000.00</p>
+          <span>Всего за все время</span>
+        </div>
+        <div class="card">
+          <h3>Рост баланса</h3>
+          <p>+8.5%</p>
+          <span>По сравнению с прошлым месяцем</span>
+        </div>
+      </section>
 
+      <section class="graph">
+        <h3>График портфеля</h3>
+        <div class="graph-placeholder">[График тут]</div>
+      </section>
+    </div>
 
-    <!-- Graph placeholder -->
-    <section class="graph">
-      <h3>График портфеля</h3>
-      <div class="graph-placeholder">[График тут]</div>
-    </section>
-
+    <!-- Right: Chain Allocation -->
+    <div class="dashboard-right">
+      <h3>Chain Allocation</h3>
+      <div class="coin-list">
+        <div class="coin-item">
+          <img src="assets/coins/btc.png" alt="BTC">
+          <span>BTC - $25,430</span>
+        </div>
+        <div class="coin-item">
+          <img src="assets/coins/eth.png" alt="ETH">
+          <span>ETH - $3,420</span>
+        </div>
+        <div class="coin-item">
+          <img src="assets/coins/usdt.png" alt="USDT">
+          <span>USDT - $500</span>
+        </div>
+      </div>
+      <button class="show-all-btn">Показать все</button>
+    </div>
   </div>
+</div>
+
 
   <script src="main.js"></script>
 </body>
