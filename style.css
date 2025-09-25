@@ -5,6 +5,47 @@ body {
   background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
 }
 
+
+.modal-register,
+.modal-allcoins,
+.modal-avatars {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-register-content,
+.modal-allcoins-content,
+.modal-avatars-content {
+  background: rgba(26,26,26,0.95);
+  padding: 30px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.close-register,
+.close-allcoins,
+.close-avatars {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close-register:hover,
+.close-allcoins:hover,
+.close-avatars:hover {
+  color: #fff;
+}
+
+
 /* Регистрация */
 /* --- Логин --- */
 .login-body {
@@ -92,7 +133,7 @@ body {
 }
 
 /* --- Модалка регистрации --- */
-.modal {
+ /* .modal-register {
   display: none; 
   position: fixed;
   z-index: 10;
@@ -102,9 +143,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
-.modal-content {
+.modal-register-content {
   background: rgba(26, 26, 26, 0.95);
   backdrop-filter: blur(8px);
   padding: 30px;
@@ -115,12 +156,12 @@ body {
   color: #fff;
 }
 
-.modal-content h2 {
+.modal-register-content h2 {
   margin-bottom: 20px;
   color: #ffffff;
 }
 
-.modal-content input {
+.modal-register-content input {
   width: 90%;
   margin: 8px auto;
   display: block;
@@ -133,7 +174,7 @@ body {
   text-align: left;
 }
 
-.modal-content button {
+.modal-register-content button {
   width: 95%;
   margin: 15px auto 0 auto;
   padding: 12px;
@@ -147,11 +188,11 @@ body {
   display: block;
 }
 
-.modal-content button:hover {
+.modal-register-content button:hover {
   opacity: 0.9;
 }
 
-.close {
+/* .close {
   float: right;
   font-size: 22px;
   cursor: pointer;
@@ -160,7 +201,7 @@ body {
 
 .close:hover {
   color: #fff;
-}
+} */ */
 
 .error {
   margin-top: 10px;
@@ -472,7 +513,7 @@ body, html {
   display: flex;
   gap: 30px;
   margin-top: 20px;
-  padding-left: 20px; /* сдвигаем влево */
+  padding-left: 20px;
 }
 
 /* Левая часть: карточки и график */
@@ -536,6 +577,59 @@ body, html {
 .show-all-btn:hover {
   opacity: 0.9;
 }
+
+
+.all-coins-content {
+  width: 500px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Модалка для всех монет */
+.modal-allcoins {
+  display: none; /* скрыта по умолчанию */
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+/* Контент модалки */
+.modal-allcoins-content {
+  background: rgba(26,26,26,0.95);
+  padding: 25px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  width: 500px;        /* фиксированная ширина */
+  max-height: 600px;   /* фиксированная высота */
+  overflow-y: auto;    /* прокрутка при переполнении */
+  box-shadow: 0 0 25px rgba(106,17,203,0.3);
+}
+
+/* Крестик закрытия */
+.close-allcoins {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.close-allcoins:hover {
+  color: #fff;
+}
+
+/* Список монет внутри модалки */
+.all-coins-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
 
 
 /* ///////////////////////////////////////DASHBOARD/////////////////////////////////////////////////////////////////////////// */
@@ -763,7 +857,7 @@ body, html {
 }
 
 
-.modal {
+/* .modal {
   display: none;
   position: fixed;
   inset: 0;
@@ -784,7 +878,7 @@ body, html {
   float: right;
   font-size: 22px;
   cursor: pointer;
-}
+} */
 
 .avatar-grid {
   display: grid;
