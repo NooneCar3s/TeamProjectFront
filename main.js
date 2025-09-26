@@ -13,6 +13,13 @@ const api = axios.create({
   }
 });
 
+// token
+const token = localStorage.getItem("token");
+if (token) {
+  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
+
 
 if (localStorage.getItem("loggedIn") !== "true") {
   if (!window.location.pathname.endsWith("index.html")) {
@@ -47,23 +54,52 @@ function goToPage(page) {
 
 
 // Логин
+// const loginForm = document.getElementById("loginForm");
+// if (loginForm) {
+//   loginForm.addEventListener("submit", (e) => {
+//     e.preventDefault();
+    
+//     const username = document.getElementById("username").value;
+//     const password = document.getElementById("password").value;
+
+//     // простая проверка
+//     if (username === "admin" && password === "1234") {
+//       localStorage.setItem("loggedIn", "true");
+//       window.location.href = "dashboard.html";
+//     } else {
+//       alert("Неверный логин или пароль");
+//     }
+//   });
+// }
+
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
+
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    // простая проверка
-    if (username === "admin" && password === "1234") {
-      localStorage.setItem("loggedIn", "true");
-      window.location.href = "dashboard.html";
-    } else {
-      alert("Неверный логин или пароль");
+    try {
+      const response = await api.post("/auth/login", {
+        username,
+        password
+      });
+
+      if (response.data.success) {
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("token", response.data.token); // сохраним JWT токен
+        window.location.href = "dashboard.html";
+      } else {
+        alert(response.data.message || "Неверный логин или пароль");
+      }
+    } catch (err) {
+      alert("Ошибка сервера при входе");
+      console.error(err);
     }
   });
 }
+
 
 // Выход
 const logoutBtn = document.getElementById("logoutBtn");
