@@ -655,48 +655,111 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener("DOMContentLoaded", async () => {
   const walletIdSpan = document.getElementById("walletId");
   const walletCardsContainer = document.getElementById("walletCards");
+  const rechargeWalletBtn = document.getElementById("rechargeWallet");
 
-  if (!walletIdSpan || !walletCardsContainer) return; // значит, не на wallet.html
+  if (!walletIdSpan || !walletCardsContainer || !rechargeWalletBtn) return;
 
-  try {
-    // 1️ Получаем кошелёк пользователя
-    const walletResponse = await api.get("/wallet");
-    const wallet = walletResponse.data;
+  let walletId = null;
 
-    walletIdSpan.textContent = wallet.id || "Не найден";
+  async function loadWallet() {
+    try {
+      const walletResponse = await api.get("/wallet");
+      const wallet = walletResponse.data;
+      walletId = wallet.id;
 
-    // 2️ Получаем список монет пользователя
-    const coinsResponse = await api.get(`/wallet/${wallet.id}/coins`);
-    const coins = coinsResponse.data || [];
+      walletIdSpan.textContent = wallet.id || "Не найден";
 
-    // 3️ Если монет нет
-    if (coins.length === 0) {
-      walletCardsContainer.innerHTML = `<p class="no-coins">Монеты пока отсутствуют</p>`;
+      const coinsResponse = await api.get(`/wallet/${wallet.id}/coins`);
+      const coins = coinsResponse.data || [];
+
+      walletCardsContainer.innerHTML = "";
+
+      if (coins.length === 0) {
+        walletCardsContainer.innerHTML = `<p class="no-coins">Монеты пока отсутствуют</p>`;
+        return;
+      }
+
+      // Отрисовка карточек
+      coins.forEach((coin) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `
+          <h3>${coin.symbol}</h3>
+          <p>${coin.amount} ${coin.symbol}</p>
+          <span>$${coin.usdtValue.toFixed(2)}</span>
+        `;
+        walletCardsContainer.appendChild(card);
+      });
+    } catch (error) {
+      console.error("Ошибка при загрузке кошелька:", error);
+      walletIdSpan.textContent = "Ошибка загрузки";
+      walletCardsContainer.innerHTML = `<p class="no-coins">Не удалось загрузить данные</p>`;
+    }
+  }
+
+  // --- Модалка пополнения ---
+  const rechargeModal = document.createElement("div");
+  rechargeModal.className = "modal-avatars";
+  rechargeModal.innerHTML = `
+    <div class="modal-avatars-content">
+      <span class="close-avatars" id="closeRechargeModal">&times;</span>
+      <h3>Пополнить кошелёк</h3>
+      <p>Монета: USDT</p>
+      <input type="number" id="rechargeAmount" placeholder="Сумма в USDT">
+      <button id="confirmRecharge">Пополнить</button>
+    </div>
+  `;
+  document.body.appendChild(rechargeModal);
+
+  const closeRechargeModal = document.getElementById("closeRechargeModal");
+  const rechargeAmount = document.getElementById("rechargeAmount");
+  const confirmRecharge = document.getElementById("confirmRecharge");
+
+  function openRechargeModal() {
+    rechargeAmount.value = "";
+    rechargeModal.style.display = "flex";
+  }
+
+  closeRechargeModal.addEventListener("click", () => {
+    rechargeModal.style.display = "none";
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === rechargeModal) rechargeModal.style.display = "none";
+  });
+
+  confirmRecharge.addEventListener("click", async () => {
+    const amount = parseFloat(rechargeAmount.value);
+    if (isNaN(amount) || amount <= 0) {
+      alert("Введите корректную сумму");
       return;
     }
 
-    // 4️ Отрисовка карточек
-    walletCardsContainer.innerHTML = "";
-    coins.forEach((coin) => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        <h3>${coin.symbol}</h3>
-        <p>${coin.amount} ${coin.symbol}</p>
-        <span>$${coin.usdtValue.toFixed(2)}</span>
-        <div class="wallet-buttons">
-          <button class="wallet-btn">Пополнить</button>
-          <button class="wallet-btn">Вывести</button>
-        </div>
-      `;
-      walletCardsContainer.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Ошибка при загрузке кошелька:", error);
-    walletIdSpan.textContent = "Ошибка загрузки";
-    walletCardsContainer.innerHTML = `<p class="no-coins">Не удалось загрузить данные</p>`;
-  }
+    try {
+      const response = await api.post("/wallet/recharge", {
+        walletId,
+        amount,
+      });
+
+      if (response.data.success) {
+        alert("Пополнение успешно выполнено!");
+        rechargeModal.style.display = "none";
+        loadWallet(); // обновляем кошелёк
+      } else {
+        alert(response.data.message || "Ошибка при пополнении");
+      }
+    } catch (err) {
+      console.error("Ошибка пополнения", err);
+      alert("Ошибка сервера при пополнении");
+    }
+  });
+
+  rechargeWalletBtn.addEventListener("click", openRechargeModal);
+
+  // Загружаем кошелёк при старте
+  loadWallet();
 });
+
 
 
 
