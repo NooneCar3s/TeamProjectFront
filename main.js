@@ -431,3 +431,132 @@ document.addEventListener("DOMContentLoaded", async () => {
     walletCardsContainer.innerHTML = `<p class="no-coins">Не удалось загрузить данные</p>`;
   }
 });
+
+
+
+// ---------- Exchange logic ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const fromSelect = document.getElementById('fromCoin');
+  const toSelect = document.getElementById('toCoin');
+  const amountInput = document.getElementById('amount');
+  const exchangeBtn = document.getElementById('exchangeBtn');
+  const resultEl = document.getElementById('exchangeResult');
+
+  if (!fromSelect || !toSelect || !exchangeBtn) return; // не на странице exchange
+
+  let walletId = null;
+  let userCoins = [];
+  let marketCoins = [];
+
+  async function initExchange() {
+    try {
+      const walletRes = await api.get('/wallet');
+      walletId = walletRes.data.id;
+
+      // монеты пользователя
+      const coinsRes = await api.get(`/wallet/${walletId}/coins`);
+      userCoins = coinsRes.data || [];
+
+      // все монеты (в которые можно обменять)
+      const marketRes = await api.get('/coins');
+      marketCoins = marketRes.data || [];
+
+      populateSelects();
+    } catch (err) {
+      console.error('Ошибка загрузки данных для обмена', err);
+      resultEl.textContent = 'Ошибка загрузки данных обмена.';
+    }
+  }
+
+  function populateSelects() {
+    fromSelect.innerHTML = '';
+    toSelect.innerHTML = '';
+
+    // заполняем монеты пользователя
+    userCoins.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.symbol;
+      opt.textContent = `${c.symbol} — ${c.amount.toFixed(6)}`;
+      fromSelect.appendChild(opt);
+    });
+
+    // заполняем все доступные монеты для обмена
+    marketCoins.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.symbol;
+      opt.textContent = c.symbol;
+      toSelect.appendChild(opt);
+    });
+  }
+
+  // при изменении монеты — обновляем placeholder
+  fromSelect.addEventListener('change', () => {
+    const coin = userCoins.find(c => c.symbol === fromSelect.value);
+    if (coin) {
+      amountInput.placeholder = `Макс: ${coin.amount.toFixed(6)}`;
+    }
+  });
+
+  // обработка нажатия на кнопку "Обменять"
+  exchangeBtn.addEventListener('click', async () => {
+    const from = fromSelect.value;
+    const to = toSelect.value;
+    const amount = parseFloat(amountInput.value);
+
+    if (!from || !to || isNaN(amount) || amount <= 0) {
+      resultEl.textContent = 'Введите корректное количество.';
+      return;
+    }
+
+    if (from === to) {
+      resultEl.textContent = 'Выберите разные монеты.';
+      return;
+    }
+
+    const fromCoin = userCoins.find(c => c.symbol === from);
+    if (!fromCoin) {
+      resultEl.textContent = 'У вас нет такой монеты.';
+      return;
+    }
+
+    if (amount > fromCoin.amount) {
+      resultEl.textContent = 'Недостаточно средств.';
+      return;
+    }
+
+    try {
+      exchangeBtn.disabled = true;
+      resultEl.textContent = 'Обмен выполняется...';
+
+      // запрос к API
+      const response = await api.post('/exchange', {
+        walletId,
+        from,
+        to,
+        amount
+      });
+
+      if (response.data && response.data.success) {
+        resultEl.style.color = '#b3ffb3';
+        resultEl.textContent = response.data.message || 'Обмен успешно выполнен.';
+
+        // перезагружаем данные кошелька
+        const coinsRes = await api.get(`/wallet/${walletId}/coins`);
+        userCoins = coinsRes.data || [];
+        populateSelects();
+        amountInput.value = '';
+      } else {
+        resultEl.style.color = '#ffb3b3';
+        resultEl.textContent = response.data.message || 'Ошибка при обмене.';
+      }
+    } catch (err) {
+      console.error('Ошибка обмена', err);
+      resultEl.style.color = '#ffb3b3';
+      resultEl.textContent = err.response?.data?.message || 'Ошибка запроса.';
+    } finally {
+      exchangeBtn.disabled = false;
+    }
+  });
+
+  initExchange();
+});
