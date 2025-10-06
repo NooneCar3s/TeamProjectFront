@@ -127,28 +127,68 @@ if (logoutBtn) {
 /* ///////////////////////////////////////HISTORY/////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////////////HISTORY////////////////////////////////////////////////////////// */
 
-// Заглушка пока что
-const historyData = [
-  { date: '2025-09-22', type: 'Пополнение', coin: 'BTC', amount: '0.5', status: 'Успешно' },
-  { date: '2025-09-21', type: 'Вывод', coin: 'ETH', amount: '1.2', status: 'В процессе' },
-  { date: '2025-09-20', type: 'Обмен', coin: 'USDT→BTC', amount: '100', status: 'Успешно' },
-  { date: '2025-09-19', type: 'Пополнение', coin: 'ETH', amount: '0.3', status: 'Успешно' },
-];
+// // Заглушка пока что
+// const historyData = [
+//   { date: '2025-09-22', type: 'Пополнение', coin: 'BTC', amount: '0.5', status: 'Успешно' },
+//   { date: '2025-09-21', type: 'Вывод', coin: 'ETH', amount: '1.2', status: 'В процессе' },
+//   { date: '2025-09-20', type: 'Обмен', coin: 'USDT→BTC', amount: '100', status: 'Успешно' },
+//   { date: '2025-09-19', type: 'Пополнение', coin: 'ETH', amount: '0.3', status: 'Успешно' },
+// ];
 
-const historyBody = document.getElementById("historyBody");
-if (historyBody) {
-  historyData.forEach(item => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.date}</td>
-      <td>${item.type}</td>
-      <td>${item.coin}</td>
-      <td>${item.amount}</td>
-      <td>${item.status}</td>
-    `;
-    historyBody.appendChild(tr);
-  });
-}
+// const historyBody = document.getElementById("historyBody");
+// if (historyBody) {
+//   historyData.forEach(item => {
+//     const tr = document.createElement("tr");
+//     tr.innerHTML = `
+//       <td>${item.date}</td>
+//       <td>${item.type}</td>
+//       <td>${item.coin}</td>
+//       <td>${item.amount}</td>
+//       <td>${item.status}</td>
+//     `;
+//     historyBody.appendChild(tr);
+//   });
+// }
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const historyBody = document.getElementById("historyBody");
+  if (!historyBody) return; // если нет таблицы, значит не на странице History
+
+  try {
+    // 1️ Получаем кошелёк пользователя
+    const walletRes = await api.get("/wallet");
+    const walletId = walletRes.data.id;
+
+    // 2️ Получаем историю операций
+    const historyRes = await api.get(`/wallet/${walletId}/history`);
+    const historyData = historyRes.data || [];
+
+    // 3️ Если истории нет
+    if (historyData.length === 0) {
+      historyBody.innerHTML = `<tr><td colspan="5">История операций пока отсутствует</td></tr>`;
+      return;
+    }
+
+    // 4️ Отрисовка истории
+    historyBody.innerHTML = "";
+    historyData.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.date}</td>
+        <td>${item.type}</td>
+        <td>${item.coin}</td>
+        <td>${item.amount}</td>
+        <td>${item.status}</td>
+      `;
+      historyBody.appendChild(tr);
+    });
+
+  } catch (err) {
+    console.error("Ошибка загрузки истории:", err);
+    historyBody.innerHTML = `<tr><td colspan="5">Не удалось загрузить данные</td></tr>`;
+  }
+});
 
 
 /* ///////////////////////////////////////HISTORY/////////////////////////////////////////////////////////////////////////// */
