@@ -45,6 +45,73 @@ body {
   color: #fff;
 }
 
+/* ..........................модалка с кодом 2ффа............................ */
+/* Модалка ввода кода из письма */
+.modal-code {
+  display: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-code-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-code-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  text-align: center;
+}
+
+.modal-code-content input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.modal-code-content button {
+  width: 95%;
+  margin: 15px auto 0 auto;
+  padding: 12px;
+  background: linear-gradient(135deg, #6a11cb, #b91372);
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+}
+
+.modal-code-content button:hover {
+  opacity: 0.9;
+}
+
+/* Кнопка закрытия */
+.modal-code-content .close-code {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* ..........................модалка с кодом 2ффа............................ */
+
 
 /* Регистрация */
 /* --- Логин --- */
