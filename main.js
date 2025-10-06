@@ -198,47 +198,201 @@ document.addEventListener("DOMContentLoaded", async () => {
 /* //////////////////////////////////////////////////////ACCOUNT////////////////////////////////////////////////////////// */
 
 
-// Заглушки
-function changeUsername() {
-  const newUsername = prompt("Введите новый юзернейм:", "Admin");
-  if (newUsername) {
-    document.getElementById("usernameDisplay").textContent = newUsername;
-    alert("Юзернейм успешно изменён!");
-  }
-}
+// // Заглушки
+// function changeUsername() {
+//   const newUsername = prompt("Введите новый юзернейм:", "Admin");
+//   if (newUsername) {
+//     document.getElementById("usernameDisplay").textContent = newUsername;
+//     alert("Юзернейм успешно изменён!");
+//   }
+// }
 
-function changePassword() {
-  const newPassword = prompt("Введите новый пароль:");
-  if (newPassword) {
-    alert("Пароль успешно изменён!");
-  }
-}
+// function changePassword() {
+//   const newPassword = prompt("Введите новый пароль:");
+//   if (newPassword) {
+//     alert("Пароль успешно изменён!");
+//   }
+// }
 
-// --- Модальное окно ---
+// // --- Модальное окно ---
+// function openAvatarModal() {
+//   document.getElementById("avatarModal").style.display = "flex";
+// }
+
+// function closeAvatarModal() {
+//   document.getElementById("avatarModal").style.display = "none";
+// }
+
+// // --- Установка аватарки ---
+// function setAvatar(src) {
+//   document.getElementById("avatarImg").src = src;
+//   localStorage.setItem("avatar", src);
+//   closeAvatarModal();
+// }
+
+// // --- Загрузка сохранённых данных ---
+// window.onload = function() {
+//   const savedAvatar = localStorage.getItem("avatar");
+//   if (savedAvatar) {
+//     const avatarImg = document.getElementById("avatarImg");
+//     if (avatarImg) avatarImg.src = savedAvatar;   // обновляем только если есть на странице
+
+//     const headerAvatar = document.getElementById("headerAvatar");
+//     if (headerAvatar) headerAvatar.src = savedAvatar; // обновляем хедер
+//   }
+
+//   const savedUsername = localStorage.getItem("username");
+//   if (savedUsername) {
+//     const usernameDisplay = document.getElementById("usernameDisplay");
+//     if (usernameDisplay) usernameDisplay.textContent = savedUsername;
+
+//     const usernameText = document.getElementById("usernameText");
+//     if (usernameText) usernameText.textContent = savedUsername;
+//   }
+// };
+
+// ================= ACCOUNT LOGIC ===================
+
+
+// --- Смена аватарки (без API) ---
 function openAvatarModal() {
   document.getElementById("avatarModal").style.display = "flex";
 }
-
 function closeAvatarModal() {
   document.getElementById("avatarModal").style.display = "none";
 }
-
-// --- Установка аватарки ---
 function setAvatar(src) {
   document.getElementById("avatarImg").src = src;
+  const headerAvatar = document.getElementById("headerAvatar");
+  if (headerAvatar) headerAvatar.src = src;
   localStorage.setItem("avatar", src);
   closeAvatarModal();
 }
 
-// --- Загрузка сохранённых данных ---
-window.onload = function() {
+// --- Смена юзернейма с модалкой ---
+function createChangeUsernameModal() {
+  if (document.getElementById('changeUsernameModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'changeUsernameModal';
+  modal.className = 'modal-avatars';
+  modal.innerHTML = `
+    <div class="modal-avatars-content">
+      <span class="close-avatars" id="closeChangeUsername">&times;</span>
+      <h3>Смена юзернейма</h3>
+      <div class="change-username-form">
+        <input type="text" id="newUsername" placeholder="Новый юзернейм">
+        <button id="saveNewUsername">Сменить юзернейм</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const closeBtn = document.getElementById('closeChangeUsername');
+  const saveBtn = document.getElementById('saveNewUsername');
+
+  closeBtn.addEventListener('click', () => modal.style.display = 'none');
+  window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+  saveBtn.addEventListener('click', async () => {
+    const newUsername = document.getElementById('newUsername').value.trim();
+    if (!newUsername) {
+      alert('Введите юзернейм!');
+      return;
+    }
+
+    try {
+      const response = await api.patch('/user', { username: newUsername });
+      if (response.data.success) {
+        document.getElementById("usernameDisplay").textContent = newUsername;
+        const usernameText = document.getElementById("usernameText");
+        if (usernameText) usernameText.textContent = newUsername;
+        localStorage.setItem("username", newUsername);
+        alert('Юзернейм успешно изменён!');
+        modal.style.display = 'none';
+      } else {
+        alert(response.data.message || 'Ошибка при смене юзернейма');
+      }
+    } catch (err) {
+      console.error('Ошибка смены юзернейма:', err);
+      alert('Ошибка сервера, попробуйте позже');
+    }
+  });
+}
+
+function changeUsername() {
+  createChangeUsernameModal();
+  document.getElementById('changeUsernameModal').style.display = 'flex';
+}
+
+// --- Смена пароля с модалкой ---
+function createChangePasswordModal() {
+  if (document.getElementById('changePasswordModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'changePasswordModal';
+  modal.className = 'modal-avatars';
+  modal.innerHTML = `
+    <div class="modal-avatars-content">
+      <span class="close-avatars" id="closeChangePassword">&times;</span>
+      <h3>Смена пароля</h3>
+      <div class="change-password-form">
+        <input type="password" id="newPassword" placeholder="Новый пароль">
+        <input type="password" id="confirmPassword" placeholder="Подтвердите пароль">
+        <button id="saveNewPassword">Сменить пароль</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const closeBtn = document.getElementById('closeChangePassword');
+  const saveBtn = document.getElementById('saveNewPassword');
+
+  closeBtn.addEventListener('click', () => modal.style.display = 'none');
+  window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+  saveBtn.addEventListener('click', async () => {
+    const newPassword = document.getElementById('newPassword').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+    if (!newPassword || !confirmPassword) {
+      alert('Заполните все поля!');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert('Пароли не совпадают!');
+      return;
+    }
+
+    try {
+      const response = await api.patch('/user', { newPassword });
+      if (response.data.success) {
+        alert('Пароль успешно изменён!');
+        modal.style.display = 'none';
+      } else {
+        alert(response.data.message || 'Ошибка при смене пароля');
+      }
+    } catch (err) {
+      console.error('Ошибка при смене пароля:', err);
+      alert('Ошибка сервера, попробуйте позже');
+    }
+  });
+}
+
+function changePassword() {
+  createChangePasswordModal();
+  document.getElementById('changePasswordModal').style.display = 'flex';
+}
+
+// --- Загрузка сохранённых данных при загрузке страницы ---
+window.addEventListener('load', () => {
   const savedAvatar = localStorage.getItem("avatar");
   if (savedAvatar) {
     const avatarImg = document.getElementById("avatarImg");
-    if (avatarImg) avatarImg.src = savedAvatar;   // обновляем только если есть на странице
-
+    if (avatarImg) avatarImg.src = savedAvatar;
     const headerAvatar = document.getElementById("headerAvatar");
-    if (headerAvatar) headerAvatar.src = savedAvatar; // обновляем хедер
+    if (headerAvatar) headerAvatar.src = savedAvatar;
   }
 
   const savedUsername = localStorage.getItem("username");
@@ -249,7 +403,8 @@ window.onload = function() {
     const usernameText = document.getElementById("usernameText");
     if (usernameText) usernameText.textContent = savedUsername;
   }
-};
+});
+
 
 
 
