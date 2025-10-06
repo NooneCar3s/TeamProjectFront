@@ -27,9 +27,11 @@ if (token) {
 //   }
 // }
 
-if (!localStorage.getItem("token") && !window.location.pathname.endsWith("index.html")) {
-  window.location.href = "index.html";
-}
+
+// Закоментить для теста(Проверка токена, для запрета перехода на другие страницы)
+// if (!localStorage.getItem("token") && !window.location.pathname.endsWith("index.html")) {
+//   window.location.href = "index.html";
+// }
 
 // Buttons Sound
 // Функция для воспроизведения звука
@@ -64,7 +66,7 @@ function goToPage(page) {
 //     e.preventDefault();
     
 //     const username = document.getElementById("username").value;
-//     const password = document.getElementById("password").value;
+//     const password = document.getElementById("password").value; // ЗАКОМЕНТИТЬ ЛОГИН ТЕСТ!!!
 
 //     // простая проверка
 //     if (username === "admin" && password === "1234") {
@@ -82,7 +84,7 @@ if (loginForm) {
     e.preventDefault();
 
     const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const password = document.getElementById("password").value;  // РАСКОМЕНТИТЬ ЛОГИН!!!!
 
     try {
       const response = await api.post("/auth/login", {
@@ -108,7 +110,7 @@ if (loginForm) {
 // Выход
 // const logoutBtn = document.getElementById("logoutBtn");
 // if (logoutBtn) {
-//   logoutBtn.addEventListener("click", () => {
+//   logoutBtn.addEventListener("click", () => {   // ЗАКОМЕНТИТЬ ВЫХОД!!!!
 //     localStorage.removeItem("loggedIn");
 //     window.location.href = "index.html";
 //   });
@@ -116,7 +118,7 @@ if (loginForm) {
 
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
+  logoutBtn.addEventListener("click", () => {      // РАСКОМЕНТИТЬ ВЫХОД!!!!
     localStorage.removeItem("token");
     window.location.href = "index.html";
   });
