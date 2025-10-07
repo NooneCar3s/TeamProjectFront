@@ -1077,25 +1077,94 @@ body, html {
 .modal-coin-info {
   display: none;
   position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.5);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
+  z-index: 200;
 }
 
 .modal-coin-info-content {
-  background: #000000;
-  padding: 20px;
-  border-radius: 8px;
-  width: 300px;
+  background: #1a1a1a;
+  padding: 25px;
+  border-radius: 16px;
+  width: 340px;
   position: relative;
+  box-shadow: 0 0 25px rgba(106, 17, 203, 0.3);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.25s ease-out;
+  transition: all 0.3s;
 }
+
+.modal-coin-info-content:hover {
+  box-shadow: 0 0 25px #b91372, 0 0 35px #6a11cb;
+}
+
+.modal-coin-info-content img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  box-shadow: 0 0 15px rgba(185, 19, 114, 0.4);
+}
+
+.modal-coin-info-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.modal-coin-info-content p {
+  margin: 2px 0;
+  font-size: 15px;
+  color: #ccc;
+}
+
+.modal-coin-info-content p span {
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Цвет процентов — рост/падение */
+.modal-coin-info-content p span.growth {
+  color: #00ff85;
+}
+.modal-coin-info-content p span.fall {
+  color: #ff4b4b;
+}
+
+/* Кнопка закрытия */
 .modal-coin-info-content .close-coin-info {
   position: absolute;
-  top: 5px;
+  top: 6px;
   right: 10px;
+  font-size: 22px;
+  color: #888;
   cursor: pointer;
+  transition: 0.2s;
 }
+
+.modal-coin-info-content .close-coin-info:hover {
+  color: #fff;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
 
 /* Поиск и Модалка монетки из поиска */
