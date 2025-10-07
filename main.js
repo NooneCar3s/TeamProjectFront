@@ -7,7 +7,7 @@
 
 //  axios
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", //URL ASP.NET API
+  baseURL: "https://localhost:7164/api", //URL ASP.NET API
   headers: {
     "Content-Type": "application/json"
   }
@@ -28,7 +28,7 @@ if (token) {
 // }
 
 
-// Проверка токена, для запрета перехода на другие страницы
+//Проверка токена, для запрета перехода на другие страницы
 // if (!localStorage.getItem("token") && !window.location.pathname.endsWith("index.html")) {  // Закоментить для теста
 //   window.location.href = "index.html";
 // }
@@ -501,9 +501,9 @@ window.addEventListener('load', () => {
 //     }
 
 //     try {
-//       const response = await api.post("/auth/register", {
+//       const response = await api.post("/user/create-account", {
 //         username,
-//         email,
+//         //email,
 //         password: pass
 //       });
 
@@ -685,24 +685,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     // --- Получаем данные по кошельку ---
-    const walletRes = await api.get('/wallet');
-    const wallet = walletRes.data;
+    //const walletRes = await api.get('/Crypto/wallets');
+    //const wallet = walletRes.data;
 
     // --- Обновляем карточки ---
-    balanceCard.textContent = `$${wallet.balance.toFixed(2)}`;
-    topUpCard.textContent = `$${wallet.totalTopUp.toFixed(2)}`;
-    growthCard.textContent = `${wallet.balanceGrowth.toFixed(2)}%`;
+    // balanceCard.textContent = `$${wallet.balance.toFixed(2)}`;
+    // topUpCard.textContent = `$${wallet.totalTopUp.toFixed(2)}`;
+    // growthCard.textContent = `${wallet.balanceGrowth.toFixed(2)}%`;
 
     // --- Получаем список монет ---
-    const coinsRes = await api.get(`/wallet/${wallet.id}/coins`);
-    allCoins = coinsRes.data || [];
+    const coinsRes = await api.get('/Crypto/assets');
+    //console.log(data);
+    
+    
+    allCoins = coinsRes.data.data || [];
+
+    console.log(allCoins);
+    
+
+
 
     // --- Боковой список: максимум 5 монет ---
     coinList.innerHTML = '';
     allCoins.slice(0, 5).forEach(c => {
       const div = document.createElement('div');
       div.className = 'coin-item';
-      div.innerHTML = `<img src="${c.iconUrl}" alt="${c.symbol}"><span>${c.symbol} - $${c.usdtValue.toFixed(2)}</span>`;
+      div.innerHTML = `<img src="${c.logo}" alt="${c.symbol}"><span>${c.symbol} - $${c.marketData.currPrice}</span>`;
       coinList.appendChild(div);
     });
 
@@ -717,7 +725,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     allCoins.forEach(c => {
       const div = document.createElement('div');
       div.className = 'coin-item';
-      div.innerHTML = `<img src="${c.iconUrl}" alt="${c.symbol}"><span>${c.symbol} - $${c.usdtValue.toFixed(2)}</span>`;
+      div.innerHTML = `<img src="${c.logo}" alt="${c.symbol}"><span>${c.symbol} - $${c.marketData.currPrice}</span>`;
       allCoinsList.appendChild(div);
     });
     allCoinsModal.style.display = 'flex';
@@ -756,13 +764,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function loadWallet() {
     try {
-      const walletResponse = await api.get("/wallet");
+      //const walletResponse = await api.get("/wallet");
       const wallet = walletResponse.data;
       walletId = wallet.id;
 
       walletIdSpan.textContent = wallet.id || "Не найден";
 
-      const coinsResponse = await api.get(`/wallet/${wallet.id}/coins`);
+      //const coinsResponse = await api.get(`/wallet/${wallet.id}/coins`);
       const coins = coinsResponse.data || [];
 
       walletCardsContainer.innerHTML = "";
@@ -1013,8 +1021,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     // Получаем все монеты
-    const coinsRes = await api.get('/coins');
-    allCoins = coinsRes.data || [];
+    const coinsRes = await api.get('/Crypto/assets');
+    allCoins = coinsRes.data.data || [];
   } catch (err) {
     console.error('Ошибка загрузки монет для поиска:', err);
   }
@@ -1039,11 +1047,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function showCoinInfo(symbol) {
     try {
-      const walletRes = await api.get('/wallet');
-      const walletId = walletRes.data.id;
+      // const walletRes = await api.get('/wallet');
+      // const walletId = walletRes.data.id;
 
-      const coinsRes = await api.get(`/wallet/${walletId}/coins`);
-      const userCoins = coinsRes.data || [];
+      // const coinsRes = await api.get(`/wallet/${walletId}/coins`);
+      // const userCoins = coinsRes.data || [];
 
       const marketCoin = allCoins.find(c => c.symbol === symbol);
       const userCoin = userCoins.find(c => c.symbol === symbol);
