@@ -111,6 +111,7 @@ if (loginForm) {
   });
 }
 
+const userWalletId = localStorage.getItem("walletId");
 
 // Выход
 // const logoutBtn = document.getElementById("logoutBtn");
@@ -716,14 +717,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   let allCoins = [];
 
   try {
-    // --- Получаем данные по кошельку ---
-    //const walletRes = await api.get('/Crypto/wallets');
-    //const wallet = walletRes.data;
+    
+    console.log(userWalletId);
+    
+    //--- Получаем данные по кошельку ---
+    const walletRes = (await api.get(`/Crypto/wallets/${userWalletId}`)).data;
+    const wallet = walletRes.data;
 
-    // --- Обновляем карточки ---
-    // balanceCard.textContent = `$${wallet.balance.toFixed(2)}`;
-    // topUpCard.textContent = `$${wallet.totalTopUp.toFixed(2)}`;
-    // growthCard.textContent = `${wallet.balanceGrowth.toFixed(2)}%`;
+    //--- Обновляем карточки ---
+    balanceCard.textContent = `$${wallet.statistic.totalAssets.toFixed(2)}`;
+    topUpCard.textContent = `$${wallet.statistic.totalDeposit.toFixed(2)}`;
+    growthCard.textContent = `${wallet.statistic.apy.toFixed(2)}%`;
 
     // --- Получаем список монет ---
     const coinsRes = await api.get('/Crypto/assets');
@@ -794,7 +798,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!walletIdSpan || !walletCardsContainer || !rechargeWalletBtn) return;
 
   let walletId = null;
-  const userWalletId = localStorage.getItem("walletId");
+  //const userWalletId = localStorage.getItem("walletId");
 
   
 
