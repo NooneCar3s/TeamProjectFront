@@ -808,6 +808,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const coinsResponse = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
       const coins = coinsResponse.data || [];
+      console.log(coins);
+      
 
       walletCardsContainer.innerHTML = "";
 
@@ -821,9 +823,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.classList.add("card");
         card.innerHTML = `
-          <h3>${coin.logo}</h3>
-          <p>${coin.amount} ${coin.symbol}</p>
-          <span>$${coin.usdtValue.toFixed(2)}</span>
+          <img src = "${coin.asset.logo}"></img>
+          <p>${coin.amount} ${coin.asset.symbol}</p>
+          <span>$${coin.asset.marketData.currPrice.toFixed(2)}</span>
+          <button onclick="showCoinInfo('${coin.asset.symbol}')">Подробнее</button>
         `;
         walletCardsContainer.appendChild(card);
       });
@@ -873,12 +876,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await api.post("/wallet/recharge", {
-        walletId,
-        amount,
-      });
+      const response = (await api.put(`/Crypto/deposit?walletId=${userWalletId}&amount=${amount}`)).data;
 
-      if (response.data.success) {
+      if (response.status === 1) {
         alert("Пополнение успешно выполнено!");
         rechargeModal.style.display = "none";
         loadWallet(); // обновляем кошелёк
@@ -1081,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  async function showCoinInfo(symbol) {
+ window.showCoinInfo = async function(symbol) {
     try {
       // const walletRes = await api.get('/wallet');
       // const walletId = walletRes.data.id;
