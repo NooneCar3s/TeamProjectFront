@@ -97,8 +97,9 @@ if (loginForm) {
 
       if (response.data.status == 1) {
         localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("token", response.data.data); // сохраним JWT токен
+        localStorage.setItem("token", response.data.data.jwtToken); // сохраним JWT токен
         localStorage.setItem("login", login);
+        localStorage.setItem("walletId", response.data.data.walletId);
         window.location.href = "dashboard.html";
       } else {
         alert(response.data.message || "Неверный логин или пароль");
@@ -784,6 +785,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 /* ///////////////////////////////////////WALLET/////////////////////////////////////////////////////////////////////////// */
 /* //////////////////////////////////////////////////////WALLET////////////////////////////////////////////////////////// */
 
+
 document.addEventListener("DOMContentLoaded", async () => {
   const walletIdSpan = document.getElementById("walletId");
   const walletCardsContainer = document.getElementById("walletCards");
@@ -792,16 +794,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!walletIdSpan || !walletCardsContainer || !rechargeWalletBtn) return;
 
   let walletId = null;
+  const userWalletId = localStorage.getItem("walletId");
+
+  
 
   async function loadWallet() {
     try {
-      //const walletResponse = await api.get("/wallet");
-      const wallet = walletResponse.data;
-      walletId = wallet.id;
+      const walletResponse = (await api.get(`/Crypto/wallets/${userWalletId}`)).data;
+      //const wallet = walletResponse.data;
+      //walletId = wallet.id;
 
-      walletIdSpan.textContent = wallet.id || "Не найден";
+      walletIdSpan.textContent = walletResponse.data.walletId || "Не найден";
 
-      //const coinsResponse = await api.get(`/wallet/${wallet.id}/coins`);
+      const coinsResponse = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
       const coins = coinsResponse.data || [];
 
       walletCardsContainer.innerHTML = "";
@@ -816,7 +821,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.classList.add("card");
         card.innerHTML = `
-          <h3>${coin.symbol}</h3>
+          <h3>${coin.logo}</h3>
           <p>${coin.amount} ${coin.symbol}</p>
           <span>$${coin.usdtValue.toFixed(2)}</span>
         `;
