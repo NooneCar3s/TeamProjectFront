@@ -29,9 +29,9 @@ if (token) {
 
 
 //Проверка токена, для запрета перехода на другие страницы
-// if (!localStorage.getItem("token") && !window.location.pathname.endsWith("index.html")) {  // Закоментить для теста
-//   window.location.href = "index.html";
-// }
+if (!localStorage.getItem("token") && !window.location.pathname.endsWith("index.html")) {  // Закоментить для теста
+  window.location.href = "index.html";
+}
 
 // Buttons Sound
 // Функция для воспроизведения звука
@@ -83,18 +83,22 @@ if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
+    const login = document.getElementById("username").value;
     const password = document.getElementById("password").value;  // РАСКОМЕНТИТЬ ЛОГИН!!!!
 
     try {
-      const response = await api.post("/auth/login", {
-        username,
+      const response = await api.post("/user/log-in", {
+        login,
         password
       });
 
-      if (response.data.success) {
+      console.log(response.status);
+      console.log(response.data);
+
+      if (response.data.status == 1) {
         localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("token", response.data.token); // сохраним JWT токен
+        localStorage.setItem("token", response.data.data); // сохраним JWT токен
+        localStorage.setItem("login", login);
         window.location.href = "dashboard.html";
       } else {
         alert(response.data.message || "Неверный логин или пароль");
@@ -395,7 +399,7 @@ window.addEventListener('load', () => {
     if (headerAvatar) headerAvatar.src = savedAvatar;
   }
 
-  const savedUsername = localStorage.getItem("username");
+  const savedUsername = localStorage.getItem("login");
   if (savedUsername) {
     const usernameDisplay = document.getElementById("usernameDisplay");
     if (usernameDisplay) usernameDisplay.textContent = savedUsername;
@@ -527,50 +531,61 @@ window.addEventListener('load', () => {
 
 // .......................................Двухфакторная аутентификация.......................................................
 if (registerBtn && errorMsg) {
+  let verificationCode = null; // сохраняем код, чтобы не запрашивать повторно
+  let isCodeSent = false; // флаг, чтобы знать, был ли уже отправлен код
+
   registerBtn.addEventListener("click", async () => {
-    const username = document.getElementById("reg-username").value.trim();
+    const login = document.getElementById("reg-username").value.trim();
     const email = document.getElementById("reg-email").value.trim();
     const pass = document.getElementById("reg-password").value;
     const pass2 = document.getElementById("reg-password2").value;
 
-    // валидация
-    if (username.length < 3) { errorMsg.textContent = "Логин должен быть минимум 3 символа"; return; }
-    if (!email.includes("@") || !email.includes(".")) { errorMsg.textContent = "Введите корректный email"; return; }
-    if (pass.length < 6) { errorMsg.textContent = "Пароль должен быть минимум 6 символов"; return; }
-    if (pass !== pass2) { errorMsg.textContent = "Пароли не совпадают"; return; }
+    // Валидация
+    if (login.length < 3) return errorMsg.textContent = "Логин должен быть минимум 3 символа";
+    if (!email.includes("@") || !email.includes(".")) return errorMsg.textContent = "Введите корректный email";
+    if (pass.length < 6) return errorMsg.textContent = "Пароль должен быть минимум 6 символов";
+    if (pass !== pass2) return errorMsg.textContent = "Пароли не совпадают";
 
     try {
-      // Отправляем только email, чтобы получить код
-      const sendRes = await api.post("/auth/register/send-code", { email });
+      // Если код ещё не был отправлен, отправляем запрос
+      if (!isCodeSent) {
+        const sendRes = await api.post("/User/send-verification-code", { "requestEmail": email });
+        const { message, status, data } = sendRes.data;
 
-      const { message, status, data } = sendRes.data;
+        if (status !== 1) {
+          errorMsg.textContent = message || "Ошибка при отправке кода";
+          return;
+        }
 
-      if (status !== "ok" || !data?.code) {
-        errorMsg.textContent = message || "Ошибка при отправке кода";
-        return;
+        verificationCode = data;
+        isCodeSent = true;
+        console.log("Код отправлен:", verificationCode);  // ЗАКОМЕНТИТЬ!!!!
       }
 
       // Показываем модалку для ввода кода
       showCodeModal(async (enteredCode) => {
-        if (enteredCode !== String(data.code)) {
-          alert("Неверный код подтверждения");
-          return;
+        if (String(enteredCode) !== String(verificationCode)) {
+          alert("Неверный код подтверждения, попробуйте снова");
+          return; // не сбрасываем код, просто даем шанс ввести заново
         }
 
         try {
-          // Код верный — отправляем полные данные на сервер
-          const regRes = await api.post("/auth/register", {
+          // Код верный — создаем аккаунт
+          const regRes = await api.post("/User/create-account", {
+            login,
             email,
-            username,
             password: pass
           });
 
           const { message: regMsg, status: regStatus } = regRes.data;
 
-          if (regStatus === "ok") {
+          if (regStatus === 1) {
             alert("Регистрация успешна!");
-            document.getElementById("username").value = username;
+            document.getElementById("username").value = login;
             registerModal.style.display = "none";
+            // сбрасываем флаги, если нужно повторно использовать
+            verificationCode = null;
+            isCodeSent = false;
           } else {
             alert(regMsg || "Ошибка при регистрации");
           }
@@ -587,6 +602,7 @@ if (registerBtn && errorMsg) {
     }
   });
 }
+
 
 
 // .......................................Двухфакторная аутентификация.......................................................
@@ -722,10 +738,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Боковой список: максимум 5 монет ---
     coinList.innerHTML = '';
-    allCoins.slice(0, 5).forEach(c => {
+    allCoins.slice(0, 7).forEach(c => {
       const div = document.createElement('div');
       div.className = 'coin-item';
-      div.innerHTML = `<img src="${c.logo}" alt="${c.symbol}"><span>${c.symbol} - $${c.marketData.currPrice}</span>`;
+      div.innerHTML = `<img src="${c.logo}" alt="${c.symbol}"><span>${c.symbol} - $${c.marketData.currPrice.toFixed(2)}</span>`;
       coinList.appendChild(div);
     });
 
@@ -1069,14 +1085,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       // const userCoins = coinsRes.data || [];
 
       const marketCoin = allCoins.find(c => c.symbol === symbol);
-      const userCoin = userCoins.find(c => c.symbol === symbol);
+      console.log(marketCoin);
+      console.log(marketCoin.price);
+      console.log(marketCoin.iconUrl);
+      
+      
+      
+      //const userCoin = userCoins.find(c => c.symbol === symbol);
 
-      coinInfoContent.innerHTML = `
-        <img src="${marketCoin.iconUrl}" alt="${marketCoin.symbol}" style="width:50px;height:50px;">
-        <h3>${marketCoin.name} (${marketCoin.symbol})</h3>
-        <p>Цена: $${marketCoin.price.toFixed(2)}</p>
-        <p>На балансе: ${userCoin ? userCoin.amount : 0} ${symbol}</p>
-      `;
+      console.log(marketCoin.currPrice);
+      
+
+coinInfoContent.innerHTML = `
+  <img src="${marketCoin.logo}" alt="${marketCoin.symbol}" style="width:50px;height:50px;">
+  <h3>${marketCoin.name} (${marketCoin.symbol})</h3>
+  <p><strong>Цена:</strong> $${marketCoin.marketData?.currPrice ?? '—'}</p>
+  <hr style="margin: 10px 0;">
+  <div style="display: flex; flex-direction: column; gap: 4px;">
+    <p>Изменение за 1 час: <span style="color:${marketCoin.marketData?.percentChange1h >= 0 ? 'limegreen' : 'red'};">
+      ${marketCoin.marketData?.percentChange1h ?? '—'}%
+    </span></p>
+    <p>Изменение за 24 часа: <span style="color:${marketCoin.marketData?.percentChange24h >= 0 ? 'limegreen' : 'red'};">
+      ${marketCoin.marketData?.percentChange24h ?? '—'}%
+    </span></p>
+    <p>Изменение за 7 дней: <span style="color:${marketCoin.marketData?.percentChange7d >= 0 ? 'limegreen' : 'red'};">
+      ${marketCoin.marketData?.percentChange7d ?? '—'}%
+    </span></p>
+    <p>Изменение за 30 дней: <span style="color:${marketCoin.marketData?.percentChange30d >= 0 ? 'limegreen' : 'red'};">
+      ${marketCoin.marketData?.percentChange30d ?? '—'}%
+    </span></p>
+    <p>Изменение за 60 дней: <span style="color:${marketCoin.marketData?.percentChange60d >= 0 ? 'limegreen' : 'red'};">
+      ${marketCoin.marketData?.percentChange60d ?? '—'}%
+    </span></p>
+  </div>
+`;
+
 
       coinInfoModal.style.display = 'flex';
       searchResults.innerHTML = '';
