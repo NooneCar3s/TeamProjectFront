@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if(transType == 0) item.transactionType = "Пополнение";
       else if (transType == 2) item.transactionType = "Вывод";
       else if (transType == 1) item.transactionType = "Обмен";
-      const symb = item.fromAsset;
+      const symb = item.toAsset.toLowerCase();
       let coin = item.fromAsset + " → " + item.toAsset;
       if(item.toAsset == null) {
         coin = item.fromAsset;
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${item.date.slice(0, 10)}</td>
         <td>${item.transactionType}</td>
         <td>${coin}</td>
-        <td>${item.amount}.${symb}</td>
+        <td>${item.amount} ${symb}</td>
         <td>Выполнено</td>
       `;
       historyBody.appendChild(tr);
