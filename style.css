@@ -1181,8 +1181,22 @@ body, html {
 #walletCards {
   display: flex;
   flex-wrap: wrap;          /* позволяет переносить карточки */
-  justify-content: center;  /* выравнивает карточки по центру */
+  /* justify-content: center;   */
   gap: 15px;                /* отступы между карточками */
   padding: 15px;
   box-sizing: border-box;
+}
+
+.userCard {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1a1a1a;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(106, 17, 203, 0.2);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }

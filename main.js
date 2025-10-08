@@ -868,7 +868,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //со позицией кнопки
     coins.forEach((coin) => {
   const card = document.createElement("div");
-  card.classList.add("card");
+  card.classList.add("userCard");
   //card.style.position = "relative"; // чтобы позиционирование работало, если понадобится
   card.innerHTML = `
     <img src="${coin.asset.logo}" alt="${coin.asset.symbol}" style="display:block;margin:0 auto 10px auto;width:50px;height:50px;">
