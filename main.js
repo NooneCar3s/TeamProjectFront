@@ -984,15 +984,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function initExchange() {
     try {
-      const walletRes = await api.get('/wallet');
-      walletId = walletRes.data.id;
+      // const walletRes = await api.get('/wallet');
+      // walletId = walletRes.data.id;
 
       // монеты пользователя
-      const coinsRes = await api.get(`/wallet/${walletId}/coins`);
+      const coinsRes = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
       userCoins = coinsRes.data || [];
 
       // все монеты (в которые можно обменять)
-      const marketRes = await api.get('/coins');
+      const marketRes = (await api.get('/Crypto/assets')).data;
       marketCoins = marketRes.data || [];
 
       populateSelects();
@@ -1009,8 +1009,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // заполняем монеты пользователя
     userCoins.forEach(c => {
       const opt = document.createElement('option');
-      opt.value = c.symbol;
-      opt.textContent = `${c.symbol} — ${c.amount.toFixed(6)}`;
+      opt.value = c.asset.symbol;
+      opt.textContent = `${c.asset.symbol} — ${c.amount.toFixed(6)}`;
       fromSelect.appendChild(opt);
     });
 
@@ -1034,6 +1034,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // обработка нажатия на кнопку "Обменять"
   exchangeBtn.addEventListener('click', async () => {
     const from = fromSelect.value;
+    console.log(from);
+    
     const to = toSelect.value;
     const amount = parseFloat(amountInput.value);
 
@@ -1047,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const fromCoin = userCoins.find(c => c.symbol === from);
+    const fromCoin = userCoins.find(c => c.asset.symbol === from);
     if (!fromCoin) {
       resultEl.textContent = 'У вас нет такой монеты.';
       return;
@@ -1063,19 +1065,14 @@ document.addEventListener('DOMContentLoaded', () => {
       resultEl.textContent = 'Обмен выполняется...';
 
       // запрос к API
-      const response = await api.post('/exchange', {
-        walletId,
-        from,
-        to,
-        amount
-      });
+      const response = (await api.post(`/Crypto/exchange?walletId=${userWalletId}&fromAssetSymbol=${from}&toAssetSymbol=${to}&amount=${amount}`)).data;
 
-      if (response.data && response.data.success) {
+      if (response.data && response.status === 1) {
         resultEl.style.color = '#b3ffb3';
         resultEl.textContent = response.data.message || 'Обмен успешно выполнен.';
 
         // перезагружаем данные кошелька
-        const coinsRes = await api.get(`/wallet/${walletId}/coins`);
+        const coinsRes = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
         userCoins = coinsRes.data || [];
         populateSelects();
         amountInput.value = '';
