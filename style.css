@@ -1177,3 +1177,12 @@ body, html {
 
 
 /* Поиск и Модалка монетки из поиска */
+
+#walletCards {
+  display: flex;
+  flex-wrap: wrap;          /* позволяет переносить карточки */
+  justify-content: center;  /* выравнивает карточки по центру */
+  gap: 15px;                /* отступы между карточками */
+  padding: 15px;
+  box-sizing: border-box;
+}

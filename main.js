@@ -869,11 +869,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     coins.forEach((coin) => {
   const card = document.createElement("div");
   card.classList.add("card");
-  card.style.position = "relative"; // чтобы позиционирование работало, если понадобится
+  //card.style.position = "relative"; // чтобы позиционирование работало, если понадобится
   card.innerHTML = `
     <img src="${coin.asset.logo}" alt="${coin.asset.symbol}" style="display:block;margin:0 auto 10px auto;width:50px;height:50px;">
     <p style="text-align:center;">${coin.amount} ${coin.asset.symbol}</p>
     <span style="display:block;text-align:center;">$${coin.asset.marketData.currPrice.toFixed(2)}</span>
+
     <button 
       class="wallet-btn main" 
       onclick="showCoinInfo('${coin.asset.symbol}')"
