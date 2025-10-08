@@ -50,12 +50,14 @@
       </select>
     </div>
 
-    <div class="exchange-row">
-      <label>В</label>
-      <select id="toCoin">
-        <!-- опции подставим динамически -->
-      </select>
-    </div>
+<div class="exchange-row">
+  <label>В</label>
+  <div class="custom-select-wrapper">
+    <input type="text" id="toSearch" placeholder="Выберите монету для обмена" autocomplete="off">
+    <div class="custom-select-dropdown"></div>
+  </div>
+</div>
+
 
     <div class="exchange-row">
       <label>Сумма</label>
