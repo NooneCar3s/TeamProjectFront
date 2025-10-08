@@ -1200,3 +1200,32 @@ body, html {
   align-items: center;
   gap: 10px;
 }
+
+.rechargeButton {
+  padding: 8px 12px;
+  width: 70%;
+  background-color: #6a11cb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rechargeButton:hover {
+  background-color: #b91372;
+  box-shadow: 0 0 15px #b91372, 0 0 25px #6a11cb;
+}
+
+.wallet-info h2 {
+  width: 100%;
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  color: #fff;
+}
+
+.wallet-info span {
+  font-weight: bold;
+  color: #b91372;
+}
