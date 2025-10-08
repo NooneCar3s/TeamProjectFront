@@ -283,10 +283,19 @@ body {
 
 /* Header */
 
-.profile {
+.profileWrapper {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.profile {
+  flex: 1;
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(106, 17, 203, 0.2);
+  transition: all 0.3s;
   color: white;
 }
 
