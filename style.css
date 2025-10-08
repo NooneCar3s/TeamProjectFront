@@ -1248,7 +1248,11 @@ body, html {
 
 .custom-select-wrapper {
   position: relative;
-  width: 100%;
+  width: 95%;
+}
+
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 4px;
 }
 
 .custom-select-wrapper input {
