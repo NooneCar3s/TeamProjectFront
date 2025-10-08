@@ -183,7 +183,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if(transType == 0) item.transactionType = "Пополнение";
       else if (transType == 2) item.transactionType = "Вывод";
       else if (transType == 1) item.transactionType = "Обмен";
-      const symb = item.toAsset.toLowerCase();
+      const symb = item.fromAsset??"USDT";
+      let changedTime = item.date;
+      changedTime = changedTime.replace('T', ' ');
       let coin = item.fromAsset + " → " + item.toAsset;
       if(item.toAsset == null) {
         coin = item.fromAsset;
@@ -194,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       item.fromAsset = coin;
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${item.date.slice(0, 10)}</td>
+        <td>${changedTime.slice(0, 16)}</td>
         <td>${item.transactionType}</td>
         <td>${coin}</td>
         <td>${item.amount} ${symb}</td>
