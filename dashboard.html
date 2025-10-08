@@ -66,9 +66,10 @@
       </section>
 
       <section class="graph">
-        <select name="currency" id="graphSelect"></select>
+        <select name="currency" class="graphSelect" id="graphSelect"></select>
         <!-- <h3>График портфеля</h3> -->
-        <div class="graph-placeholder">Загрузка...</div>
+        <!-- <div class="graph-placeholder">Загрузка...</div> -->
+        <div class="chart-container" id="chart-container"></div>
       </section>
     </div>
 
@@ -110,7 +111,8 @@
 
 
 
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

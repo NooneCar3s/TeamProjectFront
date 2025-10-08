@@ -1229,62 +1229,184 @@ coinInfoContent.innerHTML = `
 
 
 ///////////////////////////// ГРАФИК  ///////////////////////////////////////////
-
 document.addEventListener('DOMContentLoaded', async () => {
   const graphSelect = document.getElementById('graphSelect');
   const graphPlaceholder = document.querySelector('.graph-placeholder');
 
   let grapSelectCoin = [];
 
+  // ----------------------------------------------------------------------
+  // 1. ЗАГРУЖАЕМ МОНЕТЫ И ЗАПОЛНЯЕМ СЕЛЕКТ
+  // ----------------------------------------------------------------------
   try {
-    // Получаем все монеты
     const coinsRes = await api.get('/Crypto/assets');
     grapSelectCoin = coinsRes.data.data || [];
 
-    // Заполняем селект опциями
     grapSelectCoin.forEach(coin => {
       const option = document.createElement('option');
-      option.value = coin.name;       // или coin.symbol, если нужно
+      // используем id, если он есть (CoinGecko принимает ID)
+      option.value = (coin.id || coin.name).toLowerCase().replace(/\s+/g, '-');
       option.textContent = coin.name;
       graphSelect.appendChild(option);
     });
-
   } catch (err) {
     console.error('Ошибка загрузки монет для поиска:', err);
+    graphPlaceholder.textContent = 'Ошибка загрузки списка монет.';
+    return;
   }
 
+  // ----------------------------------------------------------------------
+  // 2. ОБРАБОТКА ДАННЫХ С API COINGECKO
+  // ----------------------------------------------------------------------
+  function processAPIData(data) {
+    const dates = [];
+    const prices = [];
+
+    if (data && data.prices) {
+      data.prices.forEach(item => {
+        dates.push(new Date(item[0]));
+        prices.push(item[1]);
+      });
+    } else {
+      console.error("Массив 'prices' не найден в данных API.");
+    }
+
+    return { dates, prices };
+  }
+
+  // ----------------------------------------------------------------------
+  // 3. ЗАГРУЗКА И ОТОБРАЖЕНИЕ ГРАФИКА
+  // ----------------------------------------------------------------------
   async function loadGraph(cryptoId) {
-    const graphApiUrl = axios.create({
-      baseURL: `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=7`,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    // graphPlaceholder.textContent = `Загрузка графика для ${cryptoId}...`;
 
     try {
-      const response = await graphApiUrl.get();
-      console.log(response.data);
-      // здесь можно добавить логику отображения графика
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart`,
+        {
+          params: {
+            vs_currency: 'usd',
+            days: 7
+          }
+        }
+      );
+
+      const { dates, prices } = processAPIData(response.data);
+
+      console.log(dates, prices);
+      
+
+      if (dates.length === 0) {
+        graphPlaceholder.textContent = `Нет данных для ${cryptoId}`;
+        return;
+      }
+
+      const minPrice = Math.min(...prices) * 0.99;
+      const maxPrice = Math.max(...prices) * 1.01;
+      const lastDate = dates[dates.length - 1];
+
+      const traceLine = {
+        x: dates,
+        y: prices,
+        mode: 'lines',
+        type: 'scatter',
+        name: cryptoId,
+        line: { color: '#00C853', width: 1.5 },
+        fill: 'tozeroy',
+        fillcolor: 'rgba(0,200,83,0.15)',
+        hoverinfo: 'skip',
+      };
+
+      const hoverTrace = {
+        x: dates,
+        y: prices,
+        mode: 'markers',
+        showlegend: false,
+        name: '',
+        marker: { size: 0, color: 'transparent' },
+        hoverinfo: 'all',
+        hovertemplate: '<b>Цена:</b> $%{y:,.2f}<extra></extra>',
+      };
+
+      const data = [traceLine, hoverTrace];
+
+      const layout = {
+        title: false,
+        autosize: true,
+        height: 600,
+        showlegend: false,
+        plot_bgcolor: '#1A122A',
+        paper_bgcolor: '#1A122A',
+        font: { color: '#d8b4fe' },
+        hovermode: 'x unified',
+        hoverlabel: {
+          bgcolor: 'white',
+          bordercolor: '#1A122A',
+          font: { color: '#1A122A' },
+          namelength: 0
+        },
+        xaxis: {
+          rangeslider: { visible: false },
+          tickformat: '%d %b\n%H:%M',
+          title: false,
+          gridcolor: 'rgba(150,0,255,0.2)',
+          linecolor: 'rgba(150,0,255,0.4)',
+          zerolinecolor: 'rgba(150,0,255,0.4)',
+          fixedrange: true,
+          range: [dates[0], new Date(lastDate.getTime() + 24*60*60*1000)],
+          showspikes: true,
+          spikedash: 'dot',
+          spikecolor: 'white',
+          spikethickness: 1,
+          spikesnap: 'cursor',
+        },
+        yaxis: {
+          dtick: (maxPrice - minPrice) / 6,
+          range: [minPrice, maxPrice],
+          side: 'right',
+          tickformat: ',.0f',
+          fixedrange: true,
+          gridcolor: 'rgba(150,0,255,0.2)',
+          linecolor: 'rgba(150,0,255,0.4)',
+          zerolinecolor: 'rgba(150,0,255,0.4)',
+          showspikes: true,
+          spikedash: 'dot',
+          spikecolor: 'white',
+          spikethickness: 1,
+          spikesnap: 'cursor',
+          showspike1D: true,
+          spikemode: 'across'
+        },
+      };
+
+      // Рисуем график
+      Plotly.newPlot('chart-container', data, layout, {
+        responsive: true,
+        displayModeBar: false
+      });
+
       graphPlaceholder.textContent = `График для ${cryptoId} загружен`;
-    }
-    catch (err) {
+
+    } catch (err) {
       console.error('Ошибка загрузки графика:', err);
-      alert('Не удалось загрузить график.');
+      //graphPlaceholder.textContent = `Не удалось загрузить график для ${cryptoId}`;
     }
   }
 
-  // Загружаем график при смене выбора
-  graphSelect.addEventListener('change', (e) => {
-    const selectedCoin = e.target.value.toLowerCase();
-    console.log(selectedCoin);
-    
-    if (selectedCoin) {
-      loadGraph(selectedCoin);
-    }
+  // ----------------------------------------------------------------------
+  // 4. ОБНОВЛЕНИЕ ГРАФИКА ПРИ ВЫБОРЕ ИЗ СЕЛЕКТА
+  // ----------------------------------------------------------------------
+  graphSelect.addEventListener('change', e => {
+    const selectedCoin = e.target.value;
+    if (selectedCoin) loadGraph(selectedCoin);
   });
 
-  //Можно сразу загрузить график первой монеты
-  if (graphPlaceholder.textContent === 'Загрузка...') {
-    loadGraph(grapSelectCoin[0].name.toLowerCase());
+  // ----------------------------------------------------------------------
+  // 5. ЗАГРУЖАЕМ ГРАФИК ПЕРВОЙ МОНЕТЫ ПО УМОЛЧАНИЮ
+  // ----------------------------------------------------------------------
+  if (grapSelectCoin.length > 0) {
+    loadGraph(graphSelect.options[0].value);
   }
 });
+
+
