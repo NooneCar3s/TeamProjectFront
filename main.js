@@ -120,13 +120,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       else if(item.fromAsset == null) {
         coin = item.toAsset;
       }
-      item.fromAsset = coin;
+      item.fromAsset = coin
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${changedTime.slice(0, 16)}</td>
         <td>${item.transactionType}</td>
         <td>${coin}</td>
-        <td>${item.amount} ${symb}</td>
+        <td>${item.amount.toLocaleString('uk-UA')} ${symb}</td>
         <td>Выполнено</td>
       `;
       historyBody.appendChild(tr);
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     growthCard.textContent = `${wallet.statistic.apy.toFixed(2)}%`;
 
     // --- Получаем список монет ---
-    const coinsRes = await api.get('/Crypto/assets');
+    const coinsRes = await api.get(`/Crypto/assets/${userWalletId}`);
     //console.log(data);
     
     
@@ -564,7 +564,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadWallet() {
     try {
       const walletResponse = (await api.get(`/Crypto/wallets/${userWalletId}`)).data;
-
+      console.log(walletResponse);
+      
       walletIdSpan.textContent = walletResponse.data.walletId || "Не найден";
 
       const coinsResponse = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
@@ -710,7 +711,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const coinsRes = (await api.get(`/Crypto/wallet-balances?walletId=${userWalletId}`)).data;
       userCoins = coinsRes.data || [];
 
-      const marketRes = (await api.get('/Crypto/assets')).data;
+      const marketRes = (await api.get(`/Crypto/assets/${userWalletId}`)).data;
       marketCoins = marketRes.data || [];
 
       populateFromSelect();
@@ -733,7 +734,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   fromSelect.addEventListener('change', () => {
     const coin = userCoins.find(c => c.asset.symbol === fromSelect.value);
     usdtPriceSpan.textContent = coin ? coin.usdt.toFixed(6) + " USDT" : '';
-    console.log(coin);
     
     if (coin) amountInput.placeholder = `Макс: ${coin.amount.toFixed(6)}`;
   });
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     // Получаем все монеты
-    const coinsRes = await api.get('/Crypto/assets');
+    const coinsRes = await api.get(`/Crypto/assets/${userWalletId}`);
     allCoins = coinsRes.data.data || [];
   } catch (err) {
     console.error('Ошибка загрузки монет для поиска:', err);
@@ -953,13 +953,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. ЗАГРУЖАЕМ МОНЕТЫ И ЗАПОЛНЯЕМ СЕЛЕКТ
   // ----------------------------------------------------------------------
   try {
-    const coinsRes = await api.get('/Crypto/assets');
+    console.log(userWalletId);
+    
+    const coinsRes = await api.get(`/Crypto/assets/${userWalletId}`);
+    
     grapSelectCoin = coinsRes.data.data || [];
 
     grapSelectCoin.forEach(coin => {
       const option = document.createElement('option');
       option.value = (coin.id || coin.name).toLowerCase().replace(/\s+/g, '-');
       option.textContent = coin.name;
+      
       graphSelect.appendChild(option);
     });
   } catch (err) {
