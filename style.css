@@ -35,6 +35,11 @@ body {
   overflow-y: auto;
 }
 
+.modal-register-content {
+  width: 500px !important;
+}
+
+
 .close-register,
 .close-allcoins,
 .close-avatars {
