@@ -1045,7 +1045,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         title: false,
         autosize: true,
         height: 600,
-        width: 820,
         margin: { t: 20, r: 55, b: 40, l: 20 },
         showlegend: false,
         plot_bgcolor:  'rgba(26,26,26,0.85)',
