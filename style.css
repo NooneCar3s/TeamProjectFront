@@ -1438,7 +1438,7 @@ body, html {
 
 .track {
   display: inline-block;
-  animation: scroll 160s linear infinite;
+  animation: scroll 300s linear infinite;
 }
 
 @keyframes scroll {
