@@ -1446,3 +1446,78 @@ body, html {
   100% { transform: translateX(-50%); }
 }
 
+
+/* ..................................Футер в Логине............................... */
+
+.loginFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #111;
+  color: #fff;
+  padding: 10px 20px;
+  font-family: monospace;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Левая часть */
+.footerLeft {
+  text-align: left;
+  flex-shrink: 0;
+}
+
+/* Правая часть */
+.footerRight {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+/* Статичная надпись */
+.footerLabel {
+  margin-left: 65%;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+/* Бегущая строка */
+.footerMarquee {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+
+.footerTrack {
+  display: inline-block;
+  position: relative;
+  left: 100%;
+  animation: scroll 45s linear infinite;
+}
+
+.footerTrack p {
+  display: inline-block;
+  color: #5848e0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Анимация */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+
+
+/* ..................................Хедер в Логине............................... */
+
+
