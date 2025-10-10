@@ -165,6 +165,8 @@ body {
   font-size: 28px;
   margin-bottom: 10px;
   color: #b91372;
+  animation-duration: 2s;
+  animation-name: slidein;
 }
 
 .login-subtitle {
@@ -195,6 +197,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .login-form button:hover {
@@ -211,6 +214,23 @@ body {
   margin-top: 15px;
   font-size: 14px;
   color: #ccc;
+}
+
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 80%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}
+
+.login-register span {
+  animation-duration: 4s;
+  animation-name: fadeIn;
 }
 
 .login-register span {
