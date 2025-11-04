@@ -1,6 +1,6 @@
 //  axios
 const api = axios.create({
-  baseURL: "https://localhost:7164/api", //URL ASP.NET API
+  baseURL: "https://cryptfest-a7bkhcbgefhrg7av.polandcentral-01.azurewebsites.net/api", //URL ASP.NET API
   headers: {
     "Content-Type": "application/json"
   }
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   card.innerHTML = `
     <img src="${coin.asset.logo}" alt="${coin.asset.symbol}" style="display:block;margin:0 auto 10px auto;width:50px;height:50px;">
     <p style="text-align:center;">${coin.amount} ${coin.asset.symbol}</p>
-    <span style="display:block;text-align:center;">$${coin.asset.marketData.currPrice.toFixed(2)}</span>
+    <span style="display:block;text-align:center;">$${coin.asset.marketData.currPrice}</span>
 
     <button 
       class="wallet-btn main" 
@@ -803,7 +803,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       exchangeBtn.disabled = true;
       resultEl.textContent = 'Обмен выполняется...';
-
+      
       const response = (await api.post(`/Crypto/exchange?walletId=${userWalletId}&fromAssetSymbol=${from}&toAssetSymbol=${to}&amount=${amount}`)).data;
 
       if (response.data && response.status === 1) {
