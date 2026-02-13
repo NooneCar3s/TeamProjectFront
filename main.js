@@ -1,6 +1,6 @@
 //  axios
 const api = axios.create({
-  baseURL: "https://cryptfest-a7bkhcbgefhrg7av.polandcentral-01.azurewebsites.net/api", //URL ASP.NET API
+  baseURL: "http://185.70.198.29:5000/api", //URL ASP.NET API
   headers: {
     "Content-Type": "application/json"
   }
